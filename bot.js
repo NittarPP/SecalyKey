@@ -4,10 +4,17 @@ const cron = require('node-cron');
 const fs = require('fs');
 require('dotenv').config();
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
+});
+
 const PORT = 3000;
-const LUA_TEMPLATE = 'key.lua';
-const LUA_OUTPUT = 'key.lua';
+const LUA_TEMPLATE = 'key.lua'; // Use this as your template
+const LUA_OUTPUT = 'key.lua'; // This will be the generated file
 const CHANNEL_ID = '1361346341053137146';
 const MESSAGE_ID = '1364524640839532544';
 
@@ -37,16 +44,20 @@ async function updateLuaFile() {
 
 client.once('ready', () => {
     console.clear();
-    console.log(`Logged in as ${client.user.tag}`);
+    console.log(`✅ Logged in as ${client.user.tag}`);
 
     cron.schedule('0 0 * * *', updateLuaFile);
-    updateLuaFile();
 
-    const app = express();
-    app.use('/key.lua', express.static('key.lua'));
-    app.listen(PORT, () => {
-        console.log(`Lua file hosted at http://localhost:${PORT}/key.lua`);
-    });
+    updateLuaFile();
+});
+
+const app = express();
+app.use(express.static(__dirname));
+app.get('/keepalive', (req, res) => {
+    res.sendFile(__dirname + '/key.lua');
+});
+app.listen(PORT, () => {
+    console.log(`🌐 Lua file hosted at http://localhost:${PORT}/key.lua`);
 });
 
 client.login(process.env.DISCORD_TOKEN);
