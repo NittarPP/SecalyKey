@@ -18,6 +18,7 @@ const LUA_TEMPLATE = 'key.lua'; // Use this as your template
 const LUA_OUTPUT = 'key.lua'; // This will be the generated file
 const CHANNEL_ID = '1361346341053137146';
 const MESSAGE_ID = '1364524640839532544';
+const ANMESSAGE_ID = '1364929996925177886';
 
 function generateKey() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -37,7 +38,9 @@ async function updateLuaFile() {
     try {
         const channel = await client.channels.fetch(CHANNEL_ID);
         const message = await channel.messages.fetch(MESSAGE_ID);
-        await message.edit(`🔑 The key has been changed to: \`${key}\``);
+        const ANmessage = await channel.messages.fetch(ANMESSAGE_ID);
+        await message.edit(`🔑 The key has been changed to: \```${key}\````);
+        await ANmessage.edit(${key});
     } catch (err) {
         console.error('Failed to update Discord message:', err);
     }
