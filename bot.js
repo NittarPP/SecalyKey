@@ -40,7 +40,7 @@ async function updateLuaFile() {
         const message = await channel.messages.fetch(MESSAGE_ID);
         const ANmessage = await channel.messages.fetch(ANMESSAGE_ID);
         await message.edit(`🔑 The key has been changed to: \```${key}\````);
-        await ANmessage.edit(${key});
+        await ANmessage.edit(key);
     } catch (err) {
         console.error('Failed to update Discord message:', err);
     }
